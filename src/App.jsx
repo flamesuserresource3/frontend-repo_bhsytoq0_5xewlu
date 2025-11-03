@@ -1,61 +1,62 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import ElegantNavbar from './components/ElegantNavbar';
 import HeroSpline from './components/HeroSpline';
 import FeaturedGrid from './components/FeaturedGrid';
 import AppFooter from './components/AppFooter';
+import FontLoader from './components/FontLoader';
+
+function LoginModal({ open, onClose }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center">
+      <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-md" onClick={onClose} />
+      <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }} className="relative w-[92vw] max-w-md rounded-2xl border border-white/10 bg-slate-900/90 backdrop-blur-xl p-5 shadow-2xl">
+        <div className="text-center mb-4">
+          <div className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-500 to-indigo-500">ورود / ثبت‌نام</div>
+          <div className="text-sm text-white/70 mt-1">با موبایل وارد شو و شروع کن</div>
+        </div>
+        <div className="space-y-3">
+          <input placeholder="شماره موبایل" className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2 outline-none text-white/90" />
+          <button className="w-full rounded-xl bg-gradient-to-r from-fuchsia-600 to-indigo-600 text-white font-bold py-2">دریافت کد</button>
+          <button onClick={onClose} className="w-full rounded-xl border border-white/15 text-white/80 hover:bg-white/10 py-2">بستن</button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
 
 export default function App() {
-  const [selected, setSelected] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+
+  // Compose a font stack — FontLoader injects the actual files
+  const appFont = useMemo(() => ({ fontFamily: "'Vazirmatn', 'Shabnam', system-ui, -apple-system, Segoe UI, Roboto, 'Noto Sans Arabic', sans-serif" }), []);
 
   return (
-    <div className="min-h-screen bg-white text-gray-900" dir="rtl">
-      <ElegantNavbar />
-      <HeroSpline onSearch={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })} />
+    <div dir="rtl" style={appFont} className="min-h-screen text-white bg-[radial-gradient(ellipse_at_top_right,rgba(236,72,153,0.15),transparent_40%),radial-gradient(ellipse_at_bottom_left,rgba(79,70,229,0.15),transparent_40%),#0b1220]">
+      <FontLoader />
 
-      <section id="features" className="relative -mt-10 pb-2">
-        <div className="mx-auto max-w-7xl px-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            {[{
-              title: 'رزرو سریع و روان',
-              desc: 'کمتر از ۳ دقیقه تا نهایی شدن رزرو (نمایشی)',
-              color: 'from-blue-600 to-indigo-600',
-            },{
-              title: 'پرداخت امن نمایشی',
-              desc: 'تجربه پرداخت شبیه‌سازی‌شده با جزئیات واقعی',
-              color: 'from-violet-600 to-fuchsia-600',
-            },{
-              title: 'پوشش شهری گسترده',
-              desc: 'تهران، اصفهان، مشهد، تبریز، شیراز و بیشتر',
-              color: 'from-emerald-600 to-teal-600',
-            }].map((f, i) => (
-              <div key={i} className={`rounded-3xl border bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl`}>
-                <div className={`inline-block rounded-2xl bg-gradient-to-l ${f.color} px-3 py-1 text-xs font-bold text-white`}>{f.title}</div>
-                <div className="mt-2 text-sm text-gray-600">{f.desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <div className="mx-auto max-w-7xl px-4">
+        <ElegantNavbar onLoginClick={() => setOpen(true)} />
 
-      <FeaturedGrid onSelect={(it) => setSelected(it)} />
+        <main className="mt-6">
+          <HeroSpline onSearch={(q) => setQuery(q)} />
+          <FeaturedGrid onSelect={(item) => alert(`رزرو «${item.title}» — ${item.price}`)} />
 
-      {selected && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-black/60">
-          <div className="w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl" dir="rtl">
-            <img src={selected.img} alt={selected.title} className="h-48 w-full object-cover" />
-            <div className="p-5">
-              <div className="mb-2 text-lg font-extrabold">{selected.title}</div>
-              <div className="text-sm text-gray-600">در {selected.city} — قیمت از {selected.price.toLocaleString('fa-IR')} تومان</div>
-              <div className="mt-4 flex items-center justify-end gap-2">
-                <button onClick={() => setSelected(null)} className="rounded-2xl px-4 py-2 text-gray-700 hover:bg-gray-100">بستن</button>
-                <button onClick={() => { setSelected(null); alert('رزرو شما با موفقیت (نمایشی) ثبت شد.'); }} className="rounded-2xl bg-gradient-to-l from-blue-600 to-violet-600 px-4 py-2 font-bold text-white">رزرو سریع</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+          <AnimatePresence>
+            {query && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }} className="mt-8 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4">
+                <div className="text-sm text-white/80">نتایج برای: «{query}» — در نسخه نمایشی، نتایج نمونه نمایش داده می‌شود.</div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-      <AppFooter />
+          <AppFooter />
+        </main>
+      </div>
+
+      <LoginModal open={open} onClose={() => setOpen(false)} />
     </div>
   );
 }

@@ -1,50 +1,87 @@
-import { Star, MapPin } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Star, BadgeDollarSign, MapPin } from 'lucide-react';
 
-const items = Array.from({ length: 8 }).map((_, i) => ({
-  id: i + 1,
-  title: ['پارکینگ سرپوشیده','انبار کوچک','فضای کار اشتراکی','دفتر روزانه','سوله تمیز','پارکینگ حیاط','میز کار ساعتی','انباری ساختمان'][i % 8],
-  city: ['تهران','شیراز','اصفهان','تبریز','مشهد'][i % 5],
-  rating: (4 + (i % 2) + Math.random() * 0.5).toFixed(1),
-  price: 50000 + i * 15000,
-  img: `https://images.unsplash.com/photo-${['1493238792000-8113da705763','1554995207-c18c203602cb','1524758631624-e2822e304c36','1554995207-83ef6a2b6fd7','1519710164239-da123dc03ef4','1522708323590-d24dbb6b0267','1550565118-3a14e8a3d72b','1560448070-4328e2eae24d'][i % 8]}?auto=format&fit=crop&w=1200&q=60`,
-}));
+const items = [
+  {
+    id: 1,
+    title: 'استودیوی آفتابگیر در مرکز شهر',
+    location: 'تهران، میدان ونک',
+    price: '۳۸۰٬۰۰۰ تومان/ساعت',
+    rating: 4.9,
+    img: 'https://images.unsplash.com/photo-1505692952047-1a78307da8f2?q=80&w=1600&auto=format&fit=crop',
+    tag: 'ویژه'
+  },
+  {
+    id: 2,
+    title: 'اتاق جلسه مینیمال با وایت‌بورد',
+    location: 'شیراز، معالی‌آباد',
+    price: '۱٬۲۰۰٬۰۰۰ تومان/روز',
+    rating: 4.8,
+    img: 'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?q=80&w=1600&auto=format&fit=crop',
+    tag: 'پرفروش'
+  },
+  {
+    id: 3,
+    title: 'روف‌گاردن دنج برای رویداد کوچک',
+    location: 'اصفهان، چهارباغ بالا',
+    price: '۹٫۵۰۰٬۰۰۰ تومان/ماه',
+    rating: 4.7,
+    img: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=1600&auto=format&fit=crop',
+    tag: 'جدید'
+  },
+  {
+    id: 4,
+    title: 'انبار تمیز و امن در غرب شهر',
+    location: 'کرج، گوهردشت',
+    price: '۴۵۰٬۰۰۰ تومان/روز',
+    rating: 4.6,
+    img: 'https://images.unsplash.com/photo-1600566753190-17f0baa2c7d6?q=80&w=1600&auto=format&fit=crop',
+    tag: 'اقتصادی'
+  }
+];
 
 export default function FeaturedGrid({ onSelect }) {
   return (
-    <section id="listings" className="relative bg-gradient-to-b from-white to-gray-50 py-16" dir="rtl">
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="mb-6 flex items-end justify-between">
-          <div>
-            <h2 className="text-2xl font-extrabold">پیشنهادهای داغ امروز</h2>
-            <p className="mt-1 text-sm text-gray-600">بر اساس محبوبیت و امتیاز کاربران</p>
-          </div>
-          <a href="#" className="text-sm font-bold text-blue-600 hover:text-blue-700">مشاهده همه</a>
+    <section className="mt-12">
+      <div className="flex items-end justify-between mb-4">
+        <div>
+          <h2 className="text-2xl md:text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-500 to-indigo-500">فضاهای پیشنهاد ویژه</h2>
+          <p className="text-white/60 text-sm mt-1">بهترین انتخاب‌های امروز برای شما</p>
         </div>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {items.map((it) => (
-            <button key={it.id} onClick={() => onSelect?.(it)} className="group overflow-hidden rounded-3xl border border-gray-100 bg-white text-start shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-              <div className="relative h-44 w-full overflow-hidden">
-                <img src={it.img} alt={it.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
-                <div className="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-gray-800 shadow">
-                  {it.price.toLocaleString('fa-IR')} تومان
+        <button className="text-sm text-white/80 hover:text-white">مشاهده همه</button>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {items.map((it, idx) => (
+          <motion.div key={it.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05 }} whileHover={{ y: -6 }} className="group rounded-2xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+            <div className="relative aspect-[4/3] overflow-hidden">
+              <img src={it.img} alt={it.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs bg-gradient-to-r from-fuchsia-600 to-indigo-600 text-white shadow">
+                {it.tag}
+              </div>
+            </div>
+            <div className="p-4">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-white/90">{it.title}</h3>
+                <div className="flex items-center gap-1 text-yellow-300">
+                  <Star className="w-4 h-4" />
+                  <span className="text-xs text-white/80">{it.rating}</span>
                 </div>
               </div>
-              <div className="p-4">
-                <div className="mb-1 flex items-center justify-between">
-                  <div className="line-clamp-1 text-sm font-extrabold">{it.title}</div>
-                  <div className="flex items-center gap-1 text-amber-500">
-                    <Star size={14} fill="currentColor" />
-                    <span className="text-xs">{it.rating}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-600">
-                  <MapPin size={14} />
-                  {it.city}
-                </div>
+              <div className="mt-1 flex items-center gap-2 text-white/60 text-xs">
+                <MapPin className="w-4 h-4" />
+                {it.location}
               </div>
-            </button>
-          ))}
-        </div>
+              <div className="mt-3 flex items-center justify-between">
+                <div className="flex items-center gap-2 text-fuchsia-200">
+                  <BadgeDollarSign className="w-5 h-5" />
+                  <span className="font-bold">{it.price}</span>
+                </div>
+                <button onClick={() => onSelect?.(it)} className="px-3 py-1.5 rounded-xl text-sm bg-white/10 hover:bg-white/15 border border-white/10 text-white/90">رزرو</button>
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </section>
   );
