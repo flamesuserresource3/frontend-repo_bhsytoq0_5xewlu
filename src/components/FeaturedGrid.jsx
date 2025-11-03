@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Star, BadgeDollarSign, MapPin } from 'lucide-react';
+import { Star, DollarSign, MapPin } from 'lucide-react';
 
 const items = [
   {
@@ -74,7 +74,7 @@ export default function FeaturedGrid({ onSelect }) {
               </div>
               <div className="mt-3 flex items-center justify-between">
                 <div className="flex items-center gap-2 text-fuchsia-200">
-                  <BadgeDollarSign className="w-5 h-5" />
+                  <DollarSign className="w-5 h-5" />
                   <span className="font-bold">{it.price}</span>
                 </div>
                 <button onClick={() => onSelect?.(it)} className="px-3 py-1.5 rounded-xl text-sm bg-white/10 hover:bg-white/15 border border-white/10 text-white/90">رزرو</button>
